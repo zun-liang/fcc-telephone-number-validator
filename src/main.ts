@@ -3,23 +3,22 @@ const checkBtn = document.getElementById("check-btn") as HTMLButtonElement;
 const clearBtn = document.getElementById("clear-btn") as HTMLButtonElement;
 const results = document.getElementById("results-div") as HTMLDivElement;
 
-// valid usa number
-// 1. only allow numbers or  -, \s, ()
-// 2. numbers should be 10 or 11 digits
-// 3. the area code can only be 1 if there are 11 digits
-// 4. if there is (), it has to be a pair, and can not be at the start or end
-// 5. dash can not be at the start
-// 6. numbers should be grouped either in 3 digits or 4
+const numOnlyRegex = /^1?\d{10}$/;
+const spaceOrDashRegex = /^1?\s*\d{3}[\s-]\d{3}[\s-]\d{4}$/;
+const parenthesesRegex = /^1?\s*\(\d{3}\)[\s-]?\d{3}[\s-]?\d{4}$/;
+const regex = [numOnlyRegex, spaceOrDashRegex, parenthesesRegex];
 
 const check = () => {
   if (input.value === "") {
     alert("Please provide a phone number");
+  } else if (regex.some((regex) => regex.test(input.value))) {
+    results.innerHTML += `<p class="valid">Valid US number: ${input.value}</p>`;
+  } else {
+    results.innerHTML += `<p class="invalid">Invalid US number: ${input.value}</p>`;
   }
+  input.value = "";
 };
 
-const clear = () => {
-  results.textContent = "";
-};
-
+const clear = () => (results.innerHTML = "");
 checkBtn.addEventListener("click", check);
 clearBtn.addEventListener("click", clear);
